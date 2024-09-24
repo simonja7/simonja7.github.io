@@ -1,5 +1,5 @@
 // used to set the times to short values
-let debug_mode = true;
+let debug_mode = false;
 
 let timerDiv = document.getElementById('timer');
 let topRightDiv = document.getElementById('topRightDiv');
