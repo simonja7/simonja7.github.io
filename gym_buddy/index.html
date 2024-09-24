@@ -9,17 +9,26 @@
 </head>
 
 <body>
-  <h1>Gym Buddy</h1>
-  <div id="timer" class="timer_window">0:00</div>
-  <button class="start_button" onclick="start_button_click()">Start</button>
-  <p></p>
-  <table id="program_table">
-  </table>
+  <!-- remove the class name for production -->
+  <div class="">
+      <h1>Gym Buddy</h1>
+      <div id="timer" class="timer_window">0:00</div>
+      <div id="status_bar">Click Go to begin</div>
+      <p></p>
+      <table id="program_table">
+      </table>
 
-  <div id="topRightDiv"></div>
+      <div id="topRightDiv">
+        <button id="go_button" onclick="start_button_click()">
+          <span id="go_button_icon">&#9658;</span>
+          <span id="go_button_text">Go</span>
+      </button>
 
-  <script src="script.js"></script>
-  <button class="cancel_button" onclick="cancel_program()">Cancel</button>
+      </div>
+
+      <script src="script.js"></script>
+      <button class="cancel_button" onclick="cancel_program()">Cancel</button>
+  </div>
 </body>
 
 </html>

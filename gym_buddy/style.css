@@ -31,12 +31,13 @@ html {
   border-radius: 10px;
 }
 
-.start_button {
+#status_bar {
   font-size: 20pt;
-  background-color: green;
+  background-color: silver;
   width: 100%;
   color: black;
   border-radius: 10px;
+  padding: 5px;
 }
 
 .cancel_button {
@@ -67,16 +68,37 @@ html {
   position: fixed;
   top: 0;
   right: 0;
-  background-color: white;
   /* Optional: for visibility */
-  padding: 10px;
+  background-color: white;
   /* Optional: for spacing */
+  padding: 10px;
+  /*
   color: red;
   animation: fade 2s infinite;
   font-weight: bold;
   font-size: 20pt;
+  */
 }
 
 #program_table {
   width: 100%;
+}
+
+/* mobile emulator. set in the HTML div */
+.container {
+  max-width: 375px; /* Width of an iPhone screen */
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+#go_button {
+  background-color: green;
+  height: 60px;
+  width: 300px;
+  font-weight: bold;
+  font-size: 30pt;
 }

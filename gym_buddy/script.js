@@ -1,5 +1,11 @@
+// used to set the times to short values
+let debug_mode = true;
+
 let timerDiv = document.getElementById('timer');
 let topRightDiv = document.getElementById('topRightDiv');
+let go_button = document.getElementById('go_button');
+let go_button_text = document.getElementById('go_button_text');
+let status_bar = document.getElementById('status_bar');
 
 // the main variable tracking progress in the scheduled defined in program
 let program_index = 0;
@@ -27,9 +33,9 @@ const program = [
 ];
 
 //debugging
-if (false) {
+if (debug_mode) {
   program.forEach(item => {
-    if (item[1] > 0) item[1] = 3;
+    if (item[1] > 0) item[1] = 5;
   });
 
 }
@@ -100,35 +106,6 @@ function run_timer() {
   }, 1000);
 }
 
-// populate the program
-const table = document.getElementById("program_table");
-var row_index = 0;
-program.forEach(item => {
-  duration = item[1];
-  const row = table.insertRow();
-  row.id = "row_ex_" + row_index;
-  const cell1 = row.insertCell(0);
-  const cell2 = row.insertCell(1);
-
-  cell1.textContent = item[0];
-  cell1.color = item[3];
-
-  if (duration == 0) {
-    const button = document.createElement("button");
-    button.textContent = item[2];
-    button.id = "button_ex_" + row_index;
-    button.className = "done_button";
-    button.onclick = done_button_onClick;
-    button.disabled = true;
-    console.debug(button.id);
-    cell2.appendChild(button);
-  }
-  else {
-    cell2.textContent = item[1];
-  }
-  row_index += 1;
-});
-
 function focus_row(row, highlight = false) {
 
   if (row == null) return;
@@ -153,14 +130,14 @@ function focus_row(row, highlight = false) {
 function run_exercise() {
 
   if (program_index > program_count) {
-    set_top_right_text('');
+    set_status('');
     return;
   }
 
   exercise = program[program_index];
   if (exercise == null) return;
 
-  set_top_right_text(exercise[0]);
+  set_status(exercise[0], exercise[3]);
 
   //set the first row highlight
   if (program_index == 0) {
@@ -171,15 +148,20 @@ function run_exercise() {
     //a 0 duration exercise is an untimed exercise
     //end processing which will be restarted by the button
     //start the timer counting up from 0
+    set_button_text("Done");
+    go_button.onclick = done_button_onClick;
+    dimable_go_button(false);
+
     run_timer();
     return;
   }
   else {
+    dimable_go_button();
     countdown(exercise[1], exercise[2], exercise[3]).then(() => {
       init_next_exercise();
       run_exercise();
     });
-  }
+  };
 };
 
 
@@ -208,7 +190,7 @@ function init_next_exercise() {
 
   //we're done
   if (program_index > program_count) {
-    set_top_right_text('');
+    set_status('');
     return;
   }
 
@@ -221,10 +203,6 @@ function get_row_by_id(id) {
   return document.getElementById("row_ex_" + id);
 }
 
-function set_top_right_text(text) {
-  topRightDiv.innerText = text;
-}
-
 function cancel_program() {
   stop_timer = true;
   stop_countdown = true;
@@ -235,7 +213,7 @@ function cancel_program() {
   for (var i = 0; i < all_rows.length; i++) {
     focus_row(get_row_by_id(i), false);
   }
-  set_top_right_text('');
+  set_status('');
   program_index = 999;
   run_exercise();
 }
@@ -250,3 +228,67 @@ function start_button_click() {
   program_index = 0
   run_exercise();
 }
+
+//set the text and background color of the status display
+function set_status(text, bgcolor = null) {
+  next = '';
+  if(bgcolor !== null){
+    //not using this. set the background color of the status bar
+    //status_bar.style.backgroundColor = bgcolor
+  }
+  if(text.toLowerCase() == 'rest'){
+    //TODO get the next exercise
+    nextercise = program[program_index + 1];
+    if (nextercise != null){
+      text = text + '. Next up: ' + nextercise[0];
+    }
+  }
+
+  status_bar.innerText = text;
+}
+
+function set_button_text(text){
+  go_button_text.innerText = text;
+}
+
+//disable and dim the main go/done button
+function dimable_go_button(dimable=true){
+  opacity = 1;
+  if(dimable){
+    opacity = 0.25
+  }
+  go_button.style.opacity = opacity;
+  go_button.style.disabled = dimable;
+
+}
+
+// populate the program UI
+const table = document.getElementById("program_table");
+var row_index = 0;
+program.forEach(item => {
+  duration = item[1];
+  const row = table.insertRow();
+  row.id = "row_ex_" + row_index;
+  const cell1 = row.insertCell(0);
+  const cell2 = row.insertCell(1);
+
+  cell1.textContent = item[0];
+  cell1.color = item[3];
+
+  if (duration == 0) {
+    /* the major Go button will now do this
+    const button = document.createElement("button");
+    button.textContent = item[2];
+    button.id = "button_ex_" + row_index;
+    button.className = "done_button";
+    button.onclick = done_button_onClick;
+    button.disabled = true;
+    console.debug(button.id);
+    cell2.appendChild(button);
+    */
+  }
+  else {
+    cell2.textContent = item[1];
+  }
+  row_index += 1;
+});
