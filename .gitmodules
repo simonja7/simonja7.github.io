@@ -1,0 +1,3 @@
+[submodule "gym_buddy"]
+	path = gym_buddy
+	url = https://github.com/simonja7/exercise_app
